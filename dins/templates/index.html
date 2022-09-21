@@ -1,0 +1,23 @@
+#index.html
+<table class="table-contents" style="padding:10px">
+    <tr>
+        <th>id</th>
+        <th>title</th>
+        <th>headline</th>
+        <th>date_news</th>
+        <th>news_link</th>
+        <th>content</th>
+        <th>category</th>
+    </tr>
+    {% for news in news_list %}
+        <tr>
+            <td>{{news.id}}</td>
+            <td>{{news.title}}</td>
+            <td>{{news.headline}}</td>
+            <td>{{news.date_news}}</td>
+            <td>{{news.news_link}}</td>
+            <td>{{news.content}}</td>
+            <td>{{news.category}}</td>
+        </tr>
+    {% endfor %}
+</table>

@@ -1,0 +1,13 @@
+-- CREATE DATABASE dins default CHARACTER SET UTF8;
+-- SHOW DATABASES;
+
+CREATE TABLE news
+(
+	_id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(32) NOT NULL,
+    headline VARCHAR(48) NOT NULL,
+    date_news VARCHAR(16) NOT NULL,
+    news_link VARCHAR(128) NOT NULL,
+    content VARCHAR(1024) NOT NULL,
+    category VARCHAR(16) NOT null
+);
