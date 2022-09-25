@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <Button
-                android:id="@+id/button1"
+                android:id="@+id/btn_ctg_sports"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -29,11 +29,10 @@
                 android:background="@android:color/transparent"
                 android:text="스포츠"
                 android:textColor="@color/black"
-                android:textSize="18dp"
-                android:textStyle="bold" />
+                android:textSize="18sp" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/btn_ctg_entertainment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -41,11 +40,10 @@
                 android:background="@android:color/transparent"
                 android:text="연예"
                 android:textColor="@color/black"
-                android:textSize="18dp"
-                android:textStyle="bold" />
+                android:textSize="18sp" />
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/btn_ctg_economy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -53,11 +51,10 @@
                 android:background="@android:color/transparent"
                 android:text="경제"
                 android:textColor="@color/black"
-                android:textSize="18dp"
-                android:textStyle="bold" />
+                android:textSize="18sp" />
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/btn_ctg_politics"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -65,20 +62,18 @@
                 android:background="@android:color/transparent"
                 android:text="정치"
                 android:textColor="@color/black"
-                android:textSize="18dp"
-                android:textStyle="bold" />
+                android:textSize="18sp" />
 
             <Button
-                android:id="@+id/button5"
+                android:id="@+id/btn_ctg_esports"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:text="E스초프"
+                android:text="E스포츠"
                 android:textColor="@color/black"
-                android:textSize="18dp"
-                android:textStyle="bold" />
+                android:textSize="18sp" />
         </LinearLayout>
     </HorizontalScrollView>
 
@@ -90,38 +85,38 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button11"
+            android:id="@+id/btn_date_select"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:text="기간선택"
             android:textColor="@color/black"
-            android:textSize="18dp" />
+            android:textSize="18sp" />
 
         <Button
-            android:id="@+id/button12"
+            android:id="@+id/btn_date_daily"
             android:layout_width="30dp"
-            android:layout_height="45dp"
+            android:layout_height="42dp"
             android:layout_marginHorizontal="4dp"
             android:layout_weight="1"
             android:background="@drawable/custom_button"
             android:text="일간" />
 
         <Button
-            android:id="@+id/button13"
+            android:id="@+id/btn_date_weekly"
             android:layout_width="30dp"
-            android:layout_height="45dp"
+            android:layout_height="42dp"
             android:layout_marginHorizontal="4dp"
             android:layout_weight="1"
             android:background="@drawable/custom_button"
             android:text="주간" />
 
         <Button
-            android:id="@+id/button14"
+            android:id="@+id/btn_date_monthly"
             android:layout_width="30dp"
-            android:layout_height="45dp"
+            android:layout_height="42dp"
             android:layout_marginHorizontal="4dp"
             android:layout_weight="1"
             android:background="@drawable/custom_button"
@@ -136,7 +131,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="top"
@@ -145,7 +140,7 @@
             android:text="어제의 스포츠 뉴스 키워드"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="25dp"
+            android:textSize="25sp"
             android:textStyle="bold" />
 
     </LinearLayout>
