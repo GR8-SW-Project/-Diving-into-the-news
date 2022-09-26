@@ -1,6 +1,7 @@
 package com.example.divingintothenews;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.Pair;
 
 import android.annotation.SuppressLint;
 import android.graphics.Typeface;
@@ -12,6 +13,9 @@ import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -113,9 +117,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,11 +148,31 @@ public class HomeActivity extends AppCompatActivity {
 
         DateBtnOnClickListener onClickListener2 = new DateBtnOnClickListener();
 
-        btn_date_select.setOnClickListener(onClickListener2);
         btn_date_daily.setOnClickListener(onClickListener2);
         btn_date_weekly.setOnClickListener(onClickListener2);
         btn_date_monthly.setOnClickListener(onClickListener2);
 
         tv_title = findViewById(R.id.tv_title);
+
+        MaterialDatePicker.Builder<Pair<Long, Long>> materialDateBuilder = MaterialDatePicker.Builder.dateRangePicker();
+        materialDateBuilder.setTitleText("기간 선택");
+        materialDateBuilder.setInputMode(MaterialDatePicker.INPUT_MODE_TEXT);
+        materialDateBuilder.setTheme(com.google.android.material.R.style.Theme_MaterialComponents);
+        final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
+
+        btn_date_select.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
+                materialDatePicker.addOnPositiveButtonClickListener(
+                    new MaterialPickerOnPositiveButtonClickListener() {
+                        @SuppressLint("SetTextI18n")
+                        @Override
+                        public void onPositiveButtonClick(Object selection) {
+                            date_selected = (materialDatePicker.getHeaderText());
+                        }
+                    });
+            }
+        });
     }
 }
