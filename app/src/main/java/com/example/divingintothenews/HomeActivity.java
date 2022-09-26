@@ -23,6 +23,11 @@ public class HomeActivity extends AppCompatActivity {
     Button btn_ctg_politics;
     Button btn_ctg_esports;
 
+    Button btn_date_select;
+    Button btn_date_daily;
+    Button btn_date_weekly;
+    Button btn_date_monthly;
+
     String date_selected = "어제";
     String category_selected = "스포츠";
 
@@ -36,6 +41,7 @@ public class HomeActivity extends AppCompatActivity {
         content.setSpan(underlineSpan, 0, content.length(), 0);
         content.setSpan(boldSpan, 0, content.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         btn.setText(content);
+        btn.setTextSize(20);
     }
 
     public void buttonRemoveUnderline(Button btn){
@@ -43,6 +49,7 @@ public class HomeActivity extends AppCompatActivity {
         content.removeSpan(underlineSpan);
         content.removeSpan(boldSpan);
         btn.setText(content);
+        btn.setTextSize(18);
     }
 
     public void setTv_title(){
@@ -85,6 +92,30 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    class DateBtnOnClickListener implements Button.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.btn_date_select:
+                    date_selected = "지정하신 기간";
+                    break;
+                case R.id.btn_date_daily:
+                    date_selected = "어제";
+                    break;
+                case R.id.btn_date_weekly:
+                    date_selected = "지난 한 주";
+                    break;
+                case R.id.btn_date_monthly:
+                    date_selected = "지난 한 달";
+                    break;
+            }
+                setTv_title();
+        }
+    }
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,15 +130,27 @@ public class HomeActivity extends AppCompatActivity {
         btn_ctg_politics = findViewById(R.id.btn_ctg_politics);
         btn_ctg_esports = findViewById(R.id.btn_ctg_esports);
 
-        CategoryBtnOnClickListener onClickListener = new CategoryBtnOnClickListener() ;
+        CategoryBtnOnClickListener onClickListener1 = new CategoryBtnOnClickListener() ;
 
-        btn_ctg_sports.setOnClickListener(onClickListener);
-        btn_ctg_entertainment.setOnClickListener(onClickListener);
-        btn_ctg_economy.setOnClickListener(onClickListener);
-        btn_ctg_politics.setOnClickListener(onClickListener);
-        btn_ctg_esports.setOnClickListener(onClickListener);
+        btn_ctg_sports.setOnClickListener(onClickListener1);
+        btn_ctg_entertainment.setOnClickListener(onClickListener1);
+        btn_ctg_economy.setOnClickListener(onClickListener1);
+        btn_ctg_politics.setOnClickListener(onClickListener1);
+        btn_ctg_esports.setOnClickListener(onClickListener1);
 
         buttonUnderline(btn_ctg_sports);
+
+        btn_date_select = findViewById(R.id.btn_date_select);
+        btn_date_daily = findViewById(R.id.btn_date_daily);
+        btn_date_weekly = findViewById(R.id.btn_date_weekly);
+        btn_date_monthly = findViewById(R.id.btn_date_monthly);
+
+        DateBtnOnClickListener onClickListener2 = new DateBtnOnClickListener();
+
+        btn_date_select.setOnClickListener(onClickListener2);
+        btn_date_daily.setOnClickListener(onClickListener2);
+        btn_date_weekly.setOnClickListener(onClickListener2);
+        btn_date_monthly.setOnClickListener(onClickListener2);
 
         tv_title = findViewById(R.id.tv_title);
     }
