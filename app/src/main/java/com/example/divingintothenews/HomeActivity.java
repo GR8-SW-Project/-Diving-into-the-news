@@ -61,7 +61,7 @@ public class HomeActivity extends AppCompatActivity {
         tv_title.setText(text);
     }
 
-    class CategoryBtnOnClickListener implements Button.OnClickListener {;
+    class CategoryBtnOnClickListener implements Button.OnClickListener {
         @Override
         public void onClick(View view) {
             Button btn_old = findViewById(btn_ctg_selected);
