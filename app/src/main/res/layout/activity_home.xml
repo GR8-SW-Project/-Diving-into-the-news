@@ -153,7 +153,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/tv_temp"
         android:layout_width="match_parent"
         android:layout_height="358dp"
         android:layout_gravity="top"
