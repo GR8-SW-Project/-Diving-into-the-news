@@ -23,41 +23,36 @@ import java.util.Objects;
 
 public class HomeActivity extends AppCompatActivity {
 
-    TextView tv_title;
-    TextView tv_temp;
+    private TextView tv_title;
+    private TextView tv_temp;
 
-    Button btn_ctg_sports;
-    Button btn_ctg_entertainment;
-    Button btn_ctg_economy;
-    Button btn_ctg_politics;
-    Button btn_ctg_esports;
+    private Button btn_ctg_sports,btn_ctg_entertainment, btn_ctg_economy, btn_ctg_politics, btn_ctg_esports;
 
-    Button btn_date_select;
-    Button btn_date_daily;
-    Button btn_date_weekly;
-    Button btn_date_monthly;
+    private Button btn_date_select, btn_date_daily, btn_date_weekly, btn_date_monthly;
 
-    Button btn_start_date;
-    Button btn_end_date;
+    private Button btn_start_date, btn_end_date;
 
-    Button btn_confirm;
-    Button btn_cancel;
+    private Button btn_confirm, btn_cancel;
 
-    String date_selected = "어제";
-    String category_selected = "스포츠";
-    Button picked_button;
+    private String date_selected = "어제";
+    private String category_selected = "스포츠";
+    private Button picked_button;
 
-    LocalDate startDate;
-    LocalDate endDate;
+    private LocalDate startDate, endDate;
+    private LocalDate now;
 
-    DatePickerDialog dialog;
+    private DatePickerDialog date_picker;
+
+    private DateTimeFormatter formatter;
 
     UnderlineSpan underlineSpan = new UnderlineSpan();
     StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
 
-    int btn_ctg_selected;
+    private int btn_ctg_selected;
 
-    public void buttonUnderline(Button btn) {
+    // 선택된 카테고리 버튼 표시용 메소드
+    public void buttonHighlight(Button btn)
+    {
         SpannableString content = new SpannableString(btn.getText());
         content.setSpan(underlineSpan, 0, content.length(), 0);
         content.setSpan(boldSpan, 0, content.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -65,7 +60,9 @@ public class HomeActivity extends AppCompatActivity {
         btn.setTextSize(20);
     }
 
-    public void buttonRemoveUnderline(Button btn){
+    // 타 카테고리 버튼 선택 시 기존 표시 제거
+    public void buttonRemoveHighlight(Button btn)
+    {
         SpannableString content = new SpannableString(btn.getText());
         content.removeSpan(underlineSpan);
         content.removeSpan(boldSpan);
@@ -73,7 +70,9 @@ public class HomeActivity extends AppCompatActivity {
         btn.setTextSize(18);
     }
 
-    public void setTv_title(){
+    // 뉴스 키워드 제목 변경
+    public void setTv_title()
+    {
         String text = date_selected + "의 " + category_selected + " 뉴스 키워드";
         tv_title.setText(text);
     }
@@ -87,8 +86,8 @@ public class HomeActivity extends AppCompatActivity {
             if (btn_ctg_selected != view.getId()) {
                 btn_ctg_selected = btn_new.getId();
 
-                buttonUnderline(btn_new);
-                buttonRemoveUnderline(btn_old);
+                buttonHighlight(btn_new);
+                buttonRemoveHighlight(btn_old);
 
                 if (view.getId() == R.id.btn_ctg_sports) {
                     category_selected = "스포츠";}
@@ -122,27 +121,40 @@ public class HomeActivity extends AppCompatActivity {
     class DatePickerBtnOnClickListener implements Button.OnClickListener {
         @Override
         public void onClick(View view) {
-            dialog.show();
+            startDate = LocalDate.now();
+            endDate = LocalDate.now();
+
+            date_picker.show();
             if(view.getId() == R.id.btn_start_date){
                 picked_button = btn_start_date;}
             else if(view.getId() == R.id.btn_end_date){
                 picked_button = btn_end_date;}
         }
     }
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        Objects.requireNonNull(getSupportActionBar()).hide();
 
-        btn_ctg_selected = R.id.btn_ctg_sports;
-
+    // 홈 화면 내 View 들을 초기화
+    public void InitializeView()
+    {
+        //카테고리 지정 버튼
         btn_ctg_sports = findViewById(R.id.btn_ctg_sports);
         btn_ctg_entertainment = findViewById(R.id.btn_ctg_entertainment);
         btn_ctg_economy =  findViewById(R.id.btn_ctg_economy);
         btn_ctg_politics = findViewById(R.id.btn_ctg_politics);
         btn_ctg_esports = findViewById(R.id.btn_ctg_esports);
 
+        //기간 지정 버튼
+        btn_date_select = findViewById(R.id.btn_date_select);
+        btn_date_daily = findViewById(R.id.btn_date_daily);
+        btn_date_weekly = findViewById(R.id.btn_date_weekly);
+        btn_date_monthly = findViewById(R.id.btn_date_monthly);
+
+        //TextView
+        tv_title = findViewById(R.id.tv_title);
+        tv_temp = findViewById(R.id.tv_temp);
+    }
+
+    public void InitializeListener()
+    {
         CategoryBtnOnClickListener onClickListener1 = new CategoryBtnOnClickListener() ;
 
         btn_ctg_sports.setOnClickListener(onClickListener1);
@@ -151,31 +163,23 @@ public class HomeActivity extends AppCompatActivity {
         btn_ctg_politics.setOnClickListener(onClickListener1);
         btn_ctg_esports.setOnClickListener(onClickListener1);
 
-        buttonUnderline(btn_ctg_sports);
-
-        btn_date_select = findViewById(R.id.btn_date_select);
-        btn_date_daily = findViewById(R.id.btn_date_daily);
-        btn_date_weekly = findViewById(R.id.btn_date_weekly);
-        btn_date_monthly = findViewById(R.id.btn_date_monthly);
-
         DateBtnOnClickListener onClickListener2 = new DateBtnOnClickListener();
 
         btn_date_daily.setOnClickListener(onClickListener2);
         btn_date_weekly.setOnClickListener(onClickListener2);
         btn_date_monthly.setOnClickListener(onClickListener2);
+    }
 
-        tv_title = findViewById(R.id.tv_title);
-        tv_temp = findViewById(R.id.tv_temp);
+    public void InitializeDatePicker()
+    {
+        Dialog popup = new Dialog(this);
 
-        Dialog mDialog = new Dialog(this);
-
-        dialog = new DatePickerDialog(this, null, 2022, 9, 28);
+        date_picker = new DatePickerDialog(this, null, now.getYear(), now.getMonthValue()-1, now.getDayOfMonth());
 
         DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 LocalDate local_date = LocalDate.of(year, monthOfYear, dayOfMonth);
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
                 String local_date_text = local_date.format(formatter);
 
                 picked_button.setText(local_date_text);
@@ -191,29 +195,31 @@ public class HomeActivity extends AppCompatActivity {
             }
         };
 
-        dialog.setOnDateSetListener(listener);
+        date_picker.setOnDateSetListener(listener);
 
         btn_date_select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDialog.setContentView(R.layout.popup_layout);
+                popup.setContentView(R.layout.popup_layout);
 
-                mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                popup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                mDialog.show();
+                popup.show();
 
                 DatePickerBtnOnClickListener onClickListener3 = new DatePickerBtnOnClickListener();
 
-                btn_start_date = (Button) mDialog.findViewById(R.id.btn_start_date);
-                btn_end_date = (Button) mDialog.findViewById(R.id.btn_end_date);
+                btn_start_date = (Button) popup.findViewById(R.id.btn_start_date);
+                btn_end_date = (Button) popup.findViewById(R.id.btn_end_date);
 
                 btn_start_date.setOnClickListener(onClickListener3);
                 btn_end_date.setOnClickListener(onClickListener3);
 
-                btn_confirm = (Button) mDialog.findViewById(R.id.btn_confirm);
-                btn_cancel = (Button) mDialog.findViewById(R.id.btn_cancel);
+                String local_date_text = now.format(formatter);
+                btn_start_date.setText(local_date_text);
+                btn_end_date.setText(local_date_text);
 
-                btn_confirm.setEnabled(false);
+                btn_confirm = (Button) popup.findViewById(R.id.btn_confirm);
+                btn_cancel = (Button) popup.findViewById(R.id.btn_cancel);
 
                 btn_confirm.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -221,25 +227,39 @@ public class HomeActivity extends AppCompatActivity {
                         String text = startDate + " / " + endDate;
                         tv_temp.setText(text);
 
-                        startDate = null;
-                        endDate = null;
-
                         date_selected = "지정된 기간";
                         setTv_title();
 
-                        mDialog.cancel();
+                        popup.cancel();
                     }
                 });
 
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        startDate = null;
-                        endDate = null;
-                        mDialog.cancel();
+                        popup.cancel();
                     }
                 });
             }
         });
+    }
+
+    public void InitializeVariable()
+    {
+        now = LocalDate.now();
+        formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        btn_ctg_selected = R.id.btn_ctg_sports;
+    }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home);
+        Objects.requireNonNull(getSupportActionBar()).hide();
+        InitializeVariable();
+        InitializeView();
+        InitializeListener();
+        InitializeDatePicker();
+
+        buttonHighlight(btn_ctg_sports);
     }
 }
