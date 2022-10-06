@@ -132,6 +132,13 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    public void InitializeVariable()
+    {
+        now = LocalDate.now();
+        formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        btn_ctg_selected = R.id.btn_ctg_sports;
+    }
+
     // 홈 화면 내 View 들을 초기화
     public void InitializeView()
     {
@@ -173,29 +180,6 @@ public class HomeActivity extends AppCompatActivity {
     public void InitializeDatePicker()
     {
         Dialog popup = new Dialog(this);
-
-        date_picker = new DatePickerDialog(this, null, now.getYear(), now.getMonthValue()-1, now.getDayOfMonth());
-
-        DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                LocalDate local_date = LocalDate.of(year, monthOfYear, dayOfMonth);
-                String local_date_text = local_date.format(formatter);
-
-                picked_button.setText(local_date_text);
-
-                if (picked_button == btn_start_date){
-                    startDate = local_date;}
-                else{
-                    endDate = local_date;}
-
-                btn_confirm.setEnabled(startDate != null && endDate != null && ((startDate.compareTo(endDate) <= 0)));
-
-                Toast.makeText(getApplicationContext(), year + "년" + monthOfYear + "월" + dayOfMonth +"일", Toast.LENGTH_SHORT).show();
-            }
-        };
-
-        date_picker.setOnDateSetListener(listener);
 
         btn_date_select.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,14 +226,31 @@ public class HomeActivity extends AppCompatActivity {
                 });
             }
         });
+
+        date_picker = new DatePickerDialog(this, null, now.getYear(), now.getMonthValue()-1, now.getDayOfMonth());
+
+        DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                LocalDate local_date = LocalDate.of(year, monthOfYear, dayOfMonth);
+                String local_date_text = local_date.format(formatter);
+
+                picked_button.setText(local_date_text);
+
+                if (picked_button == btn_start_date){
+                    startDate = local_date;}
+                else{
+                    endDate = local_date;}
+
+                btn_confirm.setEnabled(startDate != null && endDate != null && ((startDate.compareTo(endDate) <= 0)));
+
+                Toast.makeText(getApplicationContext(), year + "년" + monthOfYear + "월" + dayOfMonth +"일", Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        date_picker.setOnDateSetListener(listener);
     }
 
-    public void InitializeVariable()
-    {
-        now = LocalDate.now();
-        formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        btn_ctg_selected = R.id.btn_ctg_sports;
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
