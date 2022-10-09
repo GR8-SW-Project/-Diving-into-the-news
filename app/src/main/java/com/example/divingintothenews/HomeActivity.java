@@ -23,6 +23,7 @@ import java.util.Objects;
 
 public class HomeActivity extends AppCompatActivity {
 
+    // 메인 페이지 변수
     private TextView tv_title;
     private TextView tv_temp;
 
@@ -30,13 +31,15 @@ public class HomeActivity extends AppCompatActivity {
 
     private Button btn_date_select, btn_date_daily, btn_date_weekly, btn_date_monthly;
 
-    private Button btn_start_date, btn_end_date;
-
-    private Button btn_confirm, btn_cancel;
-
     private String date_selected = "어제";
     private String category_selected = "스포츠";
-    private Button picked_button;
+
+    private int btn_ctg_selected;
+
+    // 팝업 변수
+    private Dialog popup;
+
+    private Button btn_start_date, btn_end_date, btn_confirm, btn_cancel, picked_button;
 
     private LocalDate startDate, endDate;
     private LocalDate now;
@@ -45,14 +48,11 @@ public class HomeActivity extends AppCompatActivity {
 
     private DateTimeFormatter formatter;
 
-    UnderlineSpan underlineSpan = new UnderlineSpan();
-    StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
-
-    private int btn_ctg_selected;
-
     // 선택된 카테고리 버튼 표시용 메소드
     public void buttonHighlight(Button btn)
     {
+        UnderlineSpan underlineSpan = new UnderlineSpan();
+        StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
         SpannableString content = new SpannableString(btn.getText());
         content.setSpan(underlineSpan, 0, content.length(), 0);
         content.setSpan(boldSpan, 0, content.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -63,6 +63,8 @@ public class HomeActivity extends AppCompatActivity {
     // 타 카테고리 버튼 선택 시 기존 표시 제거
     public void buttonRemoveHighlight(Button btn)
     {
+        UnderlineSpan underlineSpan = new UnderlineSpan();
+        StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
         SpannableString content = new SpannableString(btn.getText());
         content.removeSpan(underlineSpan);
         content.removeSpan(boldSpan);
@@ -77,6 +79,7 @@ public class HomeActivity extends AppCompatActivity {
         tv_title.setText(text);
     }
 
+    // 카테고리 선택 버튼 리스너
     class CategoryBtnOnClickListener implements Button.OnClickListener {
         @Override
         public void onClick(View view) {
@@ -105,6 +108,7 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    // 일간, 주간, 월간 선택 버튼 리스너
     class DateBtnOnClickListener implements Button.OnClickListener {
         @Override
         public void onClick(View view) {
@@ -118,12 +122,23 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    // 기간 선택 버튼 리스너
+    class DateSelectBtnOnClickListener implements View.OnClickListener{
+        @Override
+        public void onClick(View view)
+        {
+            InitializePopup();
+        }
+    }
+
+    // 팝업 || 시작일, 종료일 버튼 리스너
     class DatePickerBtnOnClickListener implements Button.OnClickListener {
         @Override
         public void onClick(View view) {
             startDate = LocalDate.now();
             endDate = LocalDate.now();
 
+            date_picker.updateDate(now.getYear(), now.getMonthValue()-1, now.getDayOfMonth());
             date_picker.show();
             if(view.getId() == R.id.btn_start_date){
                 picked_button = btn_start_date;}
@@ -132,10 +147,27 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    // 팝업 || 날짜 선택 리스너
+    class DatePickerOnDateSetListener implements DatePickerDialog.OnDateSetListener{
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            LocalDate local_date = LocalDate.of(year, monthOfYear+1, dayOfMonth);
+            String local_date_text = local_date.format(formatter);
+
+            picked_button.setText(local_date_text);
+
+            if (picked_button == btn_start_date){
+                startDate = local_date;}
+            else{
+                endDate = local_date;}
+
+            btn_confirm.setEnabled(startDate != null && endDate != null && ((startDate.compareTo(endDate) <= 0)));
+        }
+    }
+
+
     public void InitializeVariable()
     {
-        now = LocalDate.now();
-        formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         btn_ctg_selected = R.id.btn_ctg_sports;
     }
 
@@ -163,7 +195,6 @@ public class HomeActivity extends AppCompatActivity {
     public void InitializeListener()
     {
         CategoryBtnOnClickListener onClickListener1 = new CategoryBtnOnClickListener() ;
-
         btn_ctg_sports.setOnClickListener(onClickListener1);
         btn_ctg_entertainment.setOnClickListener(onClickListener1);
         btn_ctg_economy.setOnClickListener(onClickListener1);
@@ -171,83 +202,74 @@ public class HomeActivity extends AppCompatActivity {
         btn_ctg_esports.setOnClickListener(onClickListener1);
 
         DateBtnOnClickListener onClickListener2 = new DateBtnOnClickListener();
-
         btn_date_daily.setOnClickListener(onClickListener2);
         btn_date_weekly.setOnClickListener(onClickListener2);
         btn_date_monthly.setOnClickListener(onClickListener2);
+
+        DateSelectBtnOnClickListener onClickListener3 = new DateSelectBtnOnClickListener();
+        btn_date_select.setOnClickListener(onClickListener3);
     }
 
-    public void InitializeDatePicker()
+    public void InitializePopup()
     {
-        Dialog popup = new Dialog(this);
+        popup = new Dialog(this);
+        popup.setContentView(R.layout.popup_layout);
+        popup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popup.show();
 
-        btn_date_select.setOnClickListener(new View.OnClickListener() {
+        InitializePopupView();
+        InitializePopupListener();
+        InitializePopupDatePicker();
+    }
+
+    public void InitializePopupView()
+    {
+        now = LocalDate.now();
+        formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+
+        btn_start_date = (Button) popup.findViewById(R.id.btn_start_date);
+        btn_end_date = (Button) popup.findViewById(R.id.btn_end_date);
+
+        String local_date_text = now.format(formatter);
+        btn_start_date.setText(local_date_text);
+        btn_end_date.setText(local_date_text);
+
+        btn_confirm = (Button) popup.findViewById(R.id.btn_confirm);
+        btn_cancel = (Button) popup.findViewById(R.id.btn_cancel);
+    }
+
+    public void InitializePopupListener()
+    {
+        DatePickerBtnOnClickListener onClickListener4 = new DatePickerBtnOnClickListener();
+
+        btn_start_date.setOnClickListener(onClickListener4);
+        btn_end_date.setOnClickListener(onClickListener4);
+
+        btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                popup.setContentView(R.layout.popup_layout);
+                String text = startDate + " / " + endDate;
+                tv_temp.setText(text);
 
-                popup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                date_selected = "지정된 기간";
+                setTv_title();
 
-                popup.show();
-
-                DatePickerBtnOnClickListener onClickListener3 = new DatePickerBtnOnClickListener();
-
-                btn_start_date = (Button) popup.findViewById(R.id.btn_start_date);
-                btn_end_date = (Button) popup.findViewById(R.id.btn_end_date);
-
-                btn_start_date.setOnClickListener(onClickListener3);
-                btn_end_date.setOnClickListener(onClickListener3);
-
-                String local_date_text = now.format(formatter);
-                btn_start_date.setText(local_date_text);
-                btn_end_date.setText(local_date_text);
-
-                btn_confirm = (Button) popup.findViewById(R.id.btn_confirm);
-                btn_cancel = (Button) popup.findViewById(R.id.btn_cancel);
-
-                btn_confirm.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String text = startDate + " / " + endDate;
-                        tv_temp.setText(text);
-
-                        date_selected = "지정된 기간";
-                        setTv_title();
-
-                        popup.cancel();
-                    }
-                });
-
-                btn_cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        popup.cancel();
-                    }
-                });
+                popup.cancel();
             }
         });
 
-        date_picker = new DatePickerDialog(this, null, now.getYear(), now.getMonthValue()-1, now.getDayOfMonth());
-
-        DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                LocalDate local_date = LocalDate.of(year, monthOfYear, dayOfMonth);
-                String local_date_text = local_date.format(formatter);
-
-                picked_button.setText(local_date_text);
-
-                if (picked_button == btn_start_date){
-                    startDate = local_date;}
-                else{
-                    endDate = local_date;}
-
-                btn_confirm.setEnabled(startDate != null && endDate != null && ((startDate.compareTo(endDate) <= 0)));
-
-                Toast.makeText(getApplicationContext(), year + "년" + monthOfYear + "월" + dayOfMonth +"일", Toast.LENGTH_SHORT).show();
+            public void onClick(View view) {
+                popup.cancel();
             }
-        };
+        });
+    }
 
+    public void InitializePopupDatePicker()
+    {
+        date_picker = new DatePickerDialog(this, null, now.getYear(), now.getMonthValue()-1, now.getDayOfMonth());
+        DatePickerOnDateSetListener listener = new DatePickerOnDateSetListener();
         date_picker.setOnDateSetListener(listener);
     }
 
@@ -259,7 +281,6 @@ public class HomeActivity extends AppCompatActivity {
         InitializeVariable();
         InitializeView();
         InitializeListener();
-        InitializeDatePicker();
 
         buttonHighlight(btn_ctg_sports);
     }
