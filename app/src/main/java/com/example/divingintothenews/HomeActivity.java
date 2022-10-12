@@ -19,7 +19,14 @@ import android.widget.Toast;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -271,6 +278,51 @@ public class HomeActivity extends AppCompatActivity {
         date_picker = new DatePickerDialog(this, null, now.getYear(), now.getMonthValue()-1, now.getDayOfMonth());
         DatePickerOnDateSetListener listener = new DatePickerOnDateSetListener();
         date_picker.setOnDateSetListener(listener);
+    }
+
+    public void server_temp(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://7516-119-69-162-141.jp.ngrok.io/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ApiService jsonPlaceHOlderApi = retrofit.create(ApiService.class);
+
+        Call<List<Post>> call = jsonPlaceHOlderApi.getPosts();
+
+        call.enqueue(new Callback<List<Post>>() {
+            @Override
+            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+
+                if (!response.isSuccessful())
+                {
+                    tv_temp.setText("Code:" + response.code());
+                    return;
+                }
+
+                List<Post> posts = response.body();
+
+                for ( Post post : posts) {
+                    String content ="";
+                    content += "ID : " + post.getId() + "\n";
+                    content += "title : " + post.getTitle() +
+                            "headline : " + post.getHeadline() +
+                            "date_news : " + post.getDate_news() +
+                            "news_link : " + post.getNews_link() +
+                            "content  : " + post.getContent() +
+                            "category : " + post.getCategory() +
+                            "site : " + post.getSite() +"\n\n";
+
+                    tv_temp.append(content);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Post>> call, Throwable t) {
+                tv_temp.setText(t.getMessage());
+            }
+        });
+
     }
 
     @Override
