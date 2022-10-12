@@ -3,6 +3,7 @@ package com.example.divingintothenews;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -15,7 +16,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -91,7 +91,7 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Button btn_old = findViewById(btn_ctg_selected);
-            Button btn_new = (Button) findViewById(view.getId());
+            Button btn_new = findViewById(view.getId());
 
             if (btn_ctg_selected != view.getId()) {
                 btn_ctg_selected = btn_new.getId();
@@ -172,7 +172,7 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-
+    // 홈 화면 변수 초기화
     public void InitializeVariable()
     {
         btn_ctg_selected = R.id.btn_ctg_sports;
@@ -199,6 +199,7 @@ public class HomeActivity extends AppCompatActivity {
         tv_temp = findViewById(R.id.tv_temp);
     }
 
+    // 홈 화면 리스너
     public void InitializeListener()
     {
         CategoryBtnOnClickListener onClickListener1 = new CategoryBtnOnClickListener() ;
@@ -217,6 +218,7 @@ public class HomeActivity extends AppCompatActivity {
         btn_date_select.setOnClickListener(onClickListener3);
     }
 
+    // 팝업 || 팝업 초기화
     public void InitializePopup()
     {
         popup = new Dialog(this);
@@ -229,22 +231,24 @@ public class HomeActivity extends AppCompatActivity {
         InitializePopupDatePicker();
     }
 
+    // 팝업 || 팝업 내 View 초기화
     public void InitializePopupView()
     {
         now = LocalDate.now();
         formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
-        btn_start_date = (Button) popup.findViewById(R.id.btn_start_date);
-        btn_end_date = (Button) popup.findViewById(R.id.btn_end_date);
+        btn_start_date = popup.findViewById(R.id.btn_start_date);
+        btn_end_date = popup.findViewById(R.id.btn_end_date);
 
         String local_date_text = now.format(formatter);
         btn_start_date.setText(local_date_text);
         btn_end_date.setText(local_date_text);
 
-        btn_confirm = (Button) popup.findViewById(R.id.btn_confirm);
-        btn_cancel = (Button) popup.findViewById(R.id.btn_cancel);
+        btn_confirm = popup.findViewById(R.id.btn_confirm);
+        btn_cancel = popup.findViewById(R.id.btn_cancel);
     }
 
+    // 팝업 || 팝업 내 리스너
     public void InitializePopupListener()
     {
         DatePickerBtnOnClickListener onClickListener4 = new DatePickerBtnOnClickListener();
@@ -273,6 +277,7 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    // 팝업 || 팝업 내 날짜 선택 기능
     public void InitializePopupDatePicker()
     {
         date_picker = new DatePickerDialog(this, null, now.getYear(), now.getMonthValue()-1, now.getDayOfMonth());
@@ -280,9 +285,10 @@ public class HomeActivity extends AppCompatActivity {
         date_picker.setOnDateSetListener(listener);
     }
 
+    // 장고 연동
     public void server_temp(){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://7516-119-69-162-141.jp.ngrok.io/")
+                .baseUrl("https://9aa2-119-69-162-141.jp.ngrok.io/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -304,14 +310,14 @@ public class HomeActivity extends AppCompatActivity {
 
                 for ( Post post : posts) {
                     String content ="";
-                    content += "ID : " + post.getId() + "\n";
-                    content += "title : " + post.getTitle() +
-                            "headline : " + post.getHeadline() +
-                            "date_news : " + post.getDate_news() +
-                            "news_link : " + post.getNews_link() +
-                            "content  : " + post.getContent() +
-                            "category : " + post.getCategory() +
-                            "site : " + post.getSite() +"\n\n";
+                    //content += "ID : " + post.getId() + "\n";
+                    content += "title : " + post.getTitle() + "\n" +
+                            "headline : " + post.getHeadline().substring(0, 30) + "...\n" +
+                            "date_news : " + post.getDate_news() + "\n" +
+                            "news_link : " + post.getNews_link() + "\n" +
+                            "content  : " + post.getContent().substring(0, 30) + "...\n" +
+                            "category : " + post.getCategory() + "\n" +
+                            "site : " + post.getSite() + "\n\n";
 
                     tv_temp.append(content);
                 }
@@ -330,10 +336,21 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Objects.requireNonNull(getSupportActionBar()).hide();
+        //server_temp();
         InitializeVariable();
         InitializeView();
         InitializeListener();
 
         buttonHighlight(btn_ctg_sports);
+
+        Button temp = findViewById(R.id.button);
+
+        temp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, NewsListActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
