@@ -16,6 +16,7 @@ import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import java.time.LocalDate;
@@ -36,6 +37,9 @@ public class HomeActivity extends AppCompatActivity {
     private String category_selected = "스포츠";
 
     private int btn_ctg_selected;
+
+    GridView gridview;
+    WordCloudBtnAdapter adapter = new WordCloudBtnAdapter(this);
 
     private final UnderlineSpan underlineSpan = new UnderlineSpan();
     private final StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
@@ -92,6 +96,8 @@ public class HomeActivity extends AppCompatActivity {
 
                 buttonHighlight(btn_new);
                 buttonRemoveHighlight(btn_old);
+
+                gridview.setAdapter(adapter);
 
                 if (view.getId() == R.id.btn_ctg_sports) {
                     category_selected = "스포츠";}
@@ -190,7 +196,6 @@ public class HomeActivity extends AppCompatActivity {
 
         //TextView
         tv_title = findViewById(R.id.tv_title);
-        tv_temp = findViewById(R.id.tv_temp);
     }
 
     // 홈 화면 리스너
@@ -291,8 +296,11 @@ public class HomeActivity extends AppCompatActivity {
 
         buttonHighlight(btn_ctg_sports);
 
-        Button temp = findViewById(R.id.button);
+        gridview = (GridView) findViewById(R.id.gridView1);
+        gridview.setAdapter(adapter);
 
+
+        /*
         temp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -300,5 +308,6 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+         */
     }
 }
