@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:background="@color/main_color"
-    tools:context=".MainActivity">
+    tools:context=".LogoActivity">
 
     <ImageView
         android:id="@+id/imageView3"

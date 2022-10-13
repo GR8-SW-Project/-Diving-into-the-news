@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.view.View;
@@ -19,14 +20,7 @@ import android.widget.TextView;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Objects;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -43,6 +37,10 @@ public class HomeActivity extends AppCompatActivity {
 
     private int btn_ctg_selected;
 
+    private final UnderlineSpan underlineSpan = new UnderlineSpan();
+    private final StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
+    SpannableString content;
+
     // 팝업 변수
     private Dialog popup;
 
@@ -58,11 +56,9 @@ public class HomeActivity extends AppCompatActivity {
     // 선택된 카테고리 버튼 표시용 메소드
     public void buttonHighlight(Button btn)
     {
-        UnderlineSpan underlineSpan = new UnderlineSpan();
-        StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
-        SpannableString content = new SpannableString(btn.getText());
-        content.setSpan(underlineSpan, 0, content.length(), 0);
-        content.setSpan(boldSpan, 0, content.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        content = new SpannableString(btn.getText());
+        content.setSpan(underlineSpan, 0, content.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        content.setSpan(boldSpan, 0, content.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         btn.setText(content);
         btn.setTextSize(20);
     }
@@ -70,9 +66,7 @@ public class HomeActivity extends AppCompatActivity {
     // 타 카테고리 버튼 선택 시 기존 표시 제거
     public void buttonRemoveHighlight(Button btn)
     {
-        UnderlineSpan underlineSpan = new UnderlineSpan();
-        StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
-        SpannableString content = new SpannableString(btn.getText());
+        content = new SpannableString(btn.getText());
         content.removeSpan(underlineSpan);
         content.removeSpan(boldSpan);
         btn.setText(content);
@@ -283,52 +277,6 @@ public class HomeActivity extends AppCompatActivity {
         date_picker = new DatePickerDialog(this, null, now.getYear(), now.getMonthValue()-1, now.getDayOfMonth());
         DatePickerOnDateSetListener listener = new DatePickerOnDateSetListener();
         date_picker.setOnDateSetListener(listener);
-    }
-
-    // 장고 연동
-    public void server_temp(){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://9aa2-119-69-162-141.jp.ngrok.io/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ApiService jsonPlaceHOlderApi = retrofit.create(ApiService.class);
-
-        Call<List<Post>> call = jsonPlaceHOlderApi.getPosts();
-
-        call.enqueue(new Callback<List<Post>>() {
-            @Override
-            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
-
-                if (!response.isSuccessful())
-                {
-                    tv_temp.setText("Code:" + response.code());
-                    return;
-                }
-
-                List<Post> posts = response.body();
-
-                for ( Post post : posts) {
-                    String content ="";
-                    //content += "ID : " + post.getId() + "\n";
-                    content += "title : " + post.getTitle() + "\n" +
-                            "headline : " + post.getHeadline().substring(0, 30) + "...\n" +
-                            "date_news : " + post.getDate_news() + "\n" +
-                            "news_link : " + post.getNews_link() + "\n" +
-                            "content  : " + post.getContent().substring(0, 30) + "...\n" +
-                            "category : " + post.getCategory() + "\n" +
-                            "site : " + post.getSite() + "\n\n";
-
-                    tv_temp.append(content);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Post>> call, Throwable t) {
-                tv_temp.setText(t.getMessage());
-            }
-        });
-
     }
 
     @Override

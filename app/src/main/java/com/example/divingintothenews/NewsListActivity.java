@@ -20,7 +20,7 @@ public class NewsListActivity extends AppCompatActivity {
 
     ListView listView;
 
-    static String[] selectedArticle;
+    private static String[] selectedArticle;
 
     public static String[] getSelectedArticle(){
         return selectedArticle;
