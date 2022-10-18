@@ -84,6 +84,13 @@ public class HomeActivity extends AppCompatActivity {
         tv_title.setText(text);
     }
 
+    // 워드 클라우드에서 워드 클릭시 화면 변경
+    public void onWordClick()
+    {
+        Intent intent = new Intent(this, NewsListActivity.class);
+        startActivity(intent);
+    }
+
     // 카테고리 선택 버튼 리스너
     class CategoryBtnOnClickListener implements Button.OnClickListener {
         @Override

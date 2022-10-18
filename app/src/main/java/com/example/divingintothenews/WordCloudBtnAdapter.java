@@ -1,6 +1,7 @@
 package com.example.divingintothenews;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -8,11 +9,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class WordCloudBtnAdapter extends BaseAdapter{
-    private Context mContext;
+    private HomeActivity mContext;
     private int btn_id;
     private int total_btns = 50;
 
-    public WordCloudBtnAdapter(Context context) {
+    public WordCloudBtnAdapter(HomeActivity context) {
         this.mContext = context;
     }
 
@@ -48,7 +49,8 @@ public class WordCloudBtnAdapter extends BaseAdapter{
             @Override
             public void onClick(View v)
             {
-                Toast.makeText(v.getContext(), "Button #" + (i + 1), Toast.LENGTH_SHORT).show();
+                mContext.onWordClick();
+                //Toast.makeText(v.getContext(), "Button #" + (i + 1), Toast.LENGTH_SHORT).show();
             }
         });
 
