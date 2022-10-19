@@ -17,11 +17,14 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from rest_framework import routers
 
-from dins.views import NewsViewSet
+from dins.views import NewsViewSet, KeywordsViewSet
 
 
 router = routers.DefaultRouter()
 router.register(r'news', NewsViewSet)
+
+router2 = routers.DefaultRouter()
+router.register(r'keywords', KeywordsViewSet)
 
 # router = routers.DefaultRouter()
 # router.register(r'news', news_view)
@@ -29,6 +32,7 @@ router.register(r'news', NewsViewSet)
 urlpatterns = [
     path('dins/', include('dins.urls')),
     path('', include(router.urls)),
+    path('', include(router2.urls)),
     re_path('admin/', admin.site.urls),
     # path('api/news', NewsListAPI.as_view()),
     # path('news/', news_view)
