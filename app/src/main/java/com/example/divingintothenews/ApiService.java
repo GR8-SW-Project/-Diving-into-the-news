@@ -11,5 +11,8 @@ import java.util.List;
 public interface ApiService {
 
     @GET("news")
-    Call<List<Post>> getPosts();
+    Call<List<NewsPost>> getNewsPosts();
+
+    @GET("keywords")
+    Call<List<KeywordPost>> getKeywordPosts();
 }

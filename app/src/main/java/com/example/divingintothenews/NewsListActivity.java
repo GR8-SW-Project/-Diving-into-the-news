@@ -9,12 +9,24 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-public class NewsListActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
 
-    String[] titleList = {"SON, 프랑크푸르트 골문 뚫자", "'UCL 무승 끊자' 손흥민, 프랑크푸르트와 홈 경기 득점포 정조준", "\"챔스 골맛 좀 보자\"… 손흥민 13일 오전 4시 출격"};
-    String[] companyList = {"kbs", "sbs", "yonhab"};
-    String[] dateList = {"2022.9.1", "2022.9.10", "2022.9.12"};
-    String[] urlList = {"https://news.zum.com/articles/78575577", "https://www.yna.co.kr/view/AKR20221011031200007", "https://m.moneys.mt.co.kr/article.html?no=2022101115521148660#_enliple"};
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+public class NewsListActivity extends AppCompatActivity {
+    String title, headline, date_news, news_link, content, category, site;
+
+    ArrayList<String> titleList = new ArrayList<String>();
+    ArrayList<String> companyList = new ArrayList<String>();
+    ArrayList<String> dateList = new ArrayList<String>();
+    ArrayList<String> urlList = new ArrayList<String>();
+
+    int i = 0;
 
     ListView listView;
 
@@ -28,10 +40,10 @@ public class NewsListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_list);
+        link_server_news();
 
         listView = (ListView) findViewById(R.id.customListView);
-        CustomBaseAdapter customBaseAdapter = new CustomBaseAdapter(getApplicationContext(), titleList, companyList, dateList);
-        listView.setAdapter(customBaseAdapter);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
@@ -39,7 +51,7 @@ public class NewsListActivity extends AppCompatActivity {
                 Intent intent = new Intent(NewsListActivity.this, ArticleActivity.class);
                 startActivity(intent);
 
-                selectedArticle = new String[]{titleList[i], companyList[i], dateList[i], urlList[i]};
+                selectedArticle = new String[] {titleList.get(i), companyList.get(i), dateList.get(i), urlList.get(i)};
             }
         });
 
@@ -47,5 +59,44 @@ public class NewsListActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setTitle("'''' 뉴스 검색 결과");
         }
+    }
+
+    public void link_server_news(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://20f9-119-69-162-141.jp.ngrok.io/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ApiService jsonPlaceHOlderApi = retrofit.create(ApiService.class);
+
+        Call<List<NewsPost>> call = jsonPlaceHOlderApi.getNewsPosts();
+        ;
+        call.enqueue(new Callback<List<NewsPost>>() {
+            @Override
+            public void onResponse(Call<List<NewsPost>> call, Response<List<NewsPost>> response) {
+
+                if (!response.isSuccessful())
+                {
+                    //tv_temp.setText("Code:" + response.code());
+                    return;
+                }
+
+                List<NewsPost> posts = response.body();
+
+                for ( NewsPost post : posts) {
+                    titleList.add(post.getTitle());
+                    companyList.add(post.getSite());
+                    dateList.add(post.getDate_news());
+                    urlList.add(post.getNews_link());
+                }
+                CustomBaseAdapter customBaseAdapter = new CustomBaseAdapter(getApplicationContext(), titleList, companyList, dateList);
+                listView.setAdapter(customBaseAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<NewsPost>> call, Throwable t) {
+                //tv_temp.setText(t.getMessage());
+            }
+        });
     }
 }

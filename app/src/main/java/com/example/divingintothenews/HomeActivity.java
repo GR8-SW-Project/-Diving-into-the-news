@@ -104,8 +104,6 @@ public class HomeActivity extends AppCompatActivity {
                 buttonHighlight(btn_new);
                 buttonRemoveHighlight(btn_old);
 
-                gridview.setAdapter(adapter);
-
                 if (view.getId() == R.id.btn_ctg_sports) {
                     category_selected = "스포츠";}
                 else if (view.getId() == R.id.btn_ctg_entertainment) {
@@ -265,9 +263,6 @@ public class HomeActivity extends AppCompatActivity {
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String text = startDate + " / " + endDate;
-                tv_temp.setText(text);
-
                 date_selected = "지정된 기간";
                 setTv_title();
 
@@ -296,7 +291,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Objects.requireNonNull(getSupportActionBar()).hide();
-        //server_temp();
+
         InitializeVariable();
         InitializeView();
         InitializeListener();
