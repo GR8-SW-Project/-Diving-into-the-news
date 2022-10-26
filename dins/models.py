@@ -17,10 +17,11 @@ class News(models.Model):
 
 class Keywords(models.Model):
     date = models.DateField(primary_key=True)
+    category = models.CharField(max_length=32)
     keyword = models.CharField(max_length=256)
     importance = models.DecimalField(max_digits=5, decimal_places=4)
 
     class Meta:
         managed = False
         db_table = 'keywords'
-        unique_together = (('date', 'keyword'),)
+        unique_together = (('date', 'keyword', 'category'),)

@@ -24,9 +24,10 @@ class NewsViewSet(APIView):
 class KeywordsViewSet(APIView):
     def get(self, request, **kwargs):
         search_date = request.GET.get('date')
+        search_category = request.GET.get('category')
         
-        if search_date:
-            queryset = Keywords.objects.filter(date=search_date)
+        if search_date != None and search_category != None:
+            queryset = Keywords.objects.filter(date=search_date, category=search_category)
         else:
             queryset = Keywords.objects.all()
             
