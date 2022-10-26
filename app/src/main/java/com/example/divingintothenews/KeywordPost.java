@@ -1,11 +1,18 @@
 package com.example.divingintothenews;
 
 public class KeywordPost {
-    int field_id;
 
-    String keyword, importance;
+    String date, category, keyword, importance;
 
-    public int getId() {return field_id;}
+    public String getDate()
+    {
+        return date;
+    }
+
+    public String getCategory()
+    {
+        return category;
+    }
 
     public String getKeyword()
     {

@@ -2,7 +2,7 @@ package com.example.divingintothenews;
 
 public class NewsPost {
     private int field_id;
-    private String title, headline, date_news, news_link, content, category, site;
+    private String title, headline, date, link, content, category, site;
 
     public int getId()
     {
@@ -16,14 +16,14 @@ public class NewsPost {
         return headline;
     }
 
-    public String getDate_news()
+    public String getDate()
     {
-        return date_news;
+        return date;
     }
 
-    public String getNews_link()
+    public String getLink()
     {
-        return news_link;
+        return link;
     }
 
     public String getContent()

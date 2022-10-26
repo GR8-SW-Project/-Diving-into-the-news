@@ -9,10 +9,18 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface ApiService {
-
     @GET("news")
-    Call<List<NewsPost>> getNewsPosts();
+    Call<List<NewsPost>> getNewsPosts(
+            @Query("date") String date,
+            @Query("category") String category,
+            @Query("content") String keyword
+    );
 
     @GET("keywords")
-    Call<List<KeywordPost>> getKeywordPosts();
+    Call<List<KeywordPost>> getKeywordPosts(
+            @Query("date") String date,
+            @Query("category") String category
+    );
+
+
 }

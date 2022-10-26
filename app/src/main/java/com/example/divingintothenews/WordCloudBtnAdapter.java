@@ -6,9 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.core.content.res.ResourcesCompat;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -19,31 +21,28 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WordCloudBtnAdapter extends BaseAdapter{
     private HomeActivity mContext;
-    private int btn_id;
-    private int total_btns = 15;
-
-    int[] id;
-
-    String[] keyword, importance;
-
-    int i = 0;
+    private int total_btns;
 
     Button btn;
-    Button[] btns = new Button[16];
 
-    public WordCloudBtnAdapter(HomeActivity context) {
-        id = new int[15];
-        keyword = new String[15];
-        importance = new String[15];
+    private ArrayList<Keyword> keywords;
 
-        link_server_keyword();
+    ArrayList<Button> btns = new ArrayList<Button>();
 
+    String date_selected;
+    String category_selected;
+
+    public WordCloudBtnAdapter(HomeActivity context, ArrayList<Keyword> keywords) {
+        this.keywords = keywords;
         this.mContext = context;
+
+        date_selected = context.getDate_selected();
+        category_selected = context.getCategory_selected();
     }
 
     @Override
     public int getCount() {
-        return total_btns;
+        return keywords.size();
     }
 
     @Override
@@ -61,8 +60,16 @@ public class WordCloudBtnAdapter extends BaseAdapter{
     {
         if (view == null) {
             btn = new Button(mContext);
-            btns[btn_id++] = btn;
+            btns.add(btn);
             btn.setBackgroundColor(Color.TRANSPARENT);
+            btn.setText(keywords.get(i).getKeyword());
+            Typeface typeface = mContext.getResources().getFont(R.font.roboto);
+            btn.setTypeface(typeface);
+            float imp = keywords.get(i).getImportance();
+            imp = 12 + (imp*imp*imp*16);
+            btn.setTextSize(imp);
+            int color = Color.rgb(66+20*i/15, 182 - 110*i/15, 245);
+            btn.setTextColor(color);
         } else {
             btn = (Button) view;
         }
@@ -72,7 +79,7 @@ public class WordCloudBtnAdapter extends BaseAdapter{
             @Override
             public void onClick(View v)
             {
-                mContext.onWordClick();
+                mContext.onWordClick(keywords.get(i).getKeyword());
                 //Toast.makeText(v.getContext(), "Button #" + (i + 1), Toast.LENGTH_SHORT).show();
             }
         });
@@ -80,15 +87,16 @@ public class WordCloudBtnAdapter extends BaseAdapter{
         return btn;
     }
 
+    /*
     public void link_server_keyword(){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://20f9-119-69-162-141.jp.ngrok.io/")
+                .baseUrl("https://44ce-119-69-162-141.jp.ngrok.io/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         ApiService jsonPlaceHOlderApi = retrofit.create(ApiService.class);
 
-        Call<List<KeywordPost>> call = jsonPlaceHOlderApi.getKeywordPosts();
+        Call<List<KeywordPost>> call = jsonPlaceHOlderApi.getKeywordPosts(date_selected, category_selected);
 
         call.enqueue(new Callback<List<KeywordPost>>() {
             @Override
@@ -104,23 +112,22 @@ public class WordCloudBtnAdapter extends BaseAdapter{
                 List<KeywordPost> posts = response.body();
 
                 for ( KeywordPost post : posts) {
-                    String content ="";
-                    id[i] = post.getId();
-                    keyword[i] = post.getKeyword();
-                    importance[i] = post.getImportance();
+                    date.add(post.getDate());
+                    category.add(post.getCategory());
+                    keyword.add(post.getKeyword());
+                    importance.add(post.getImportance());
                     float imp = new Float(post.getImportance());
 
                     imp = 12 + (imp*imp*imp*16);
                     //imp *= imp*28;
 
-                    int color = Color.rgb(66+20*i/15, 182 - 110*i/15, 245);
-                    btns[i].setTextColor(color);
+                    int color = Color.rgb(66+20*j/15, 182 - 110*j/15, 245);
+                    btns.get(j).setTextColor(color);
                     Typeface typeface = mContext.getResources().getFont(R.font.roboto);
-                    btns[i].setTypeface(typeface);
+                    btns.get(j).setTypeface(typeface);
 
-                    btns[i].setText(keyword[i]);
-                    btns[i].setTextSize(imp);
-                    i++;
+                    btns.get(j).setText(keyword.get(j));
+                    btns.get(j++).setTextSize(imp);
                 }
 
             }
@@ -131,5 +138,7 @@ public class WordCloudBtnAdapter extends BaseAdapter{
             }
         });
     }
+
+     */
 }
 

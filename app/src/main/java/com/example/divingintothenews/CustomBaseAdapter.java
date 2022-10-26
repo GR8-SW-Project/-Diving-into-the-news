@@ -15,7 +15,7 @@ public class CustomBaseAdapter extends BaseAdapter {
     ArrayList<String> titleList;
     ArrayList<String> companyList;
     ArrayList<String> dateList;
-    ArrayList<String> urlList;
+    ArrayList<String> linkList;
     LayoutInflater inflater;
 
     public CustomBaseAdapter(Context ctx, ArrayList<String> titleList, ArrayList<String> companyList, ArrayList<String> dateList) {
