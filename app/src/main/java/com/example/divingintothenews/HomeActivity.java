@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -33,6 +34,8 @@ public class HomeActivity extends AppCompatActivity {
     private String date_selected = "2022-09-19";
     private String date_selected_text = "어제";
     private String category_selected = "사회";
+
+    private Toast toastMessage;
 
     public String getDate_selected()
     {
@@ -79,12 +82,21 @@ public class HomeActivity extends AppCompatActivity {
         btn.setTextSize(18);
     }
 
+    public void makeToast(String text)
+    {
+        if (toastMessage != null){toastMessage.cancel();}
+        toastMessage = Toast.makeText(this, text, Toast.LENGTH_SHORT);
+        toastMessage.show();
+    }
+
+    /*
     // 뉴스 키워드 제목 변경
     public void setTv_title()
     {
         String text = date_selected_text + "의 " + category_selected + " 뉴스 키워드";
         tv_title.setText(text);
     }
+     */
 
     // 워드 클라우드에서 워드 클릭시 화면 변경
     public void onWordClick(String keyword)
@@ -127,7 +139,7 @@ public class HomeActivity extends AppCompatActivity {
                     category_selected = "연예";}
 
                 InitializeWordCloud();
-                setTv_title();
+                //setTv_title();
             }
         }
     }
@@ -142,7 +154,7 @@ public class HomeActivity extends AppCompatActivity {
                 date_selected_text = "지난 한 주";}
             else if (view.getId() == R.id.btn_date_monthly){
                 date_selected_text = "지난 한 달";}
-            setTv_title();
+            //setTv_title();
         }
     }
 
@@ -174,7 +186,7 @@ public class HomeActivity extends AppCompatActivity {
             date_selected = local_date_text;
             InitializeWordCloud();
             date_selected_text = local_date_text;
-            setTv_title();
+            //setTv_title();
         }
     }
 
@@ -208,8 +220,10 @@ public class HomeActivity extends AppCompatActivity {
         btn_date_weekly = findViewById(R.id.btn_date_weekly);
         btn_date_monthly = findViewById(R.id.btn_date_monthly);
 
+        /*
         //TextView
         tv_title = findViewById(R.id.tv_title);
+         */
 
         // 워드클라우드 GridView
         gridview = (GridView) findViewById(R.id.gridView1);

@@ -38,7 +38,7 @@ public class LinkServer {
 
     public void link_server_keyword(){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://f62f-119-69-162-141.jp.ngrok.io/")
+                .baseUrl("https://b9eb-119-69-162-141.jp.ngrok.io/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -52,12 +52,12 @@ public class LinkServer {
 
                 if (!response.isSuccessful())
                 {
-                    //tv_temp.setText("Code:" + response.code());
                     System.out.println("Code:" + response.code());
+                    context.makeToast("잠시 후에 다시 시도해주세요");
 
                     return;
-                }
-                System.out.println("성공");
+                }else
+                {context.makeToast(date_selected + "의 " + category_selected + " 키워드");}
 
                 List<KeywordPost> posts = response.body();
 
