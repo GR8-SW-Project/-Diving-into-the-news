@@ -188,7 +188,7 @@
             android:layout_height="match_parent"
             tools:context="com.example.user.gridbuttonview.GridActivity"
             android:layout_marginTop="20dp"
-            android:columnWidth="50dp"
+            android:columnWidth="200dp"
             android:gravity="center"
             android:numColumns="2"
             android:verticalSpacing="15dp"

@@ -38,7 +38,7 @@ public class LinkServer {
 
     public void link_server_keyword(){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://44ce-119-69-162-141.jp.ngrok.io/")
+                .baseUrl("https://f62f-119-69-162-141.jp.ngrok.io/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -53,9 +53,11 @@ public class LinkServer {
                 if (!response.isSuccessful())
                 {
                     //tv_temp.setText("Code:" + response.code());
+                    System.out.println("Code:" + response.code());
 
                     return;
                 }
+                System.out.println("성공");
 
                 List<KeywordPost> posts = response.body();
 
@@ -63,7 +65,6 @@ public class LinkServer {
                     float imp = new Float(post.getImportance());
                     Keyword item = new Keyword(post.getDate(), post.getCategory(), post.getKeyword(), imp);
                     keywords.add(item);
-                    System.out.println(keywords.size());
                 }
                 keywords.sort(Comparator.comparingDouble(Keyword::getImportance).reversed());
                 adapter = new WordCloudBtnAdapter(context,keywords);

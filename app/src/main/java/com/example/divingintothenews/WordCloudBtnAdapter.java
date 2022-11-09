@@ -66,9 +66,9 @@ public class WordCloudBtnAdapter extends BaseAdapter{
             Typeface typeface = mContext.getResources().getFont(R.font.roboto);
             btn.setTypeface(typeface);
             float imp = keywords.get(i).getImportance();
-            imp = 12 + (imp*imp*imp*16);
+            imp = 10 + (imp*imp*imp*imp*16);
             btn.setTextSize(imp);
-            int color = Color.rgb(66+20*i/15, 182 - 110*i/15, 245);
+            int color = Color.rgb(93 - 20*i/15, 35 + 110*i/15, 245);
             btn.setTextColor(color);
         } else {
             btn = (Button) view;
