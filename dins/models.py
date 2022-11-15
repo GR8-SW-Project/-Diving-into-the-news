@@ -25,3 +25,26 @@ class Keywords(models.Model):
         managed = False
         db_table = 'keywords'
         unique_together = (('date', 'keyword', 'category'),)
+
+class KeywordsWeek(models.Model):
+    date_start = models.DateField(primary_key=True)
+    date_end = models.DateField()
+    category = models.CharField(max_length=32)
+    keyword = models.CharField(max_length=256)
+    importance = models.DecimalField(max_digits=5, decimal_places=4)
+
+    class Meta:
+        managed = False
+        db_table = 'keywords_week'
+        unique_together = (('date_start', 'date_end', 'category', 'keyword'),)
+
+class KeywordsMonth(models.Model):
+    month = models.IntegerField(primary_key=True)
+    category = models.CharField(max_length=32)
+    keyword = models.CharField(max_length=256)
+    importance = models.DecimalField(max_digits=5, decimal_places=4)
+
+    class Meta:
+        managed = False
+        db_table = 'keywords_month'
+        unique_together = (('month', 'category', 'keyword'),)

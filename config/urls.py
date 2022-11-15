@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 
-from dins.views import NewsViewSet, KeywordsViewSet
+from dins.views import NewsViewSet, KeywordsViewSet, KeywordsWeekViewSet, KeywordsMonthViewSet
 
 
 # router = routers.DefaultRouter()
@@ -34,5 +34,7 @@ urlpatterns = [
     # path('', include(router2.urls)),
     path('news', NewsViewSet.as_view()),
     path('keywords', KeywordsViewSet.as_view()),
+    path('keywords_week', KeywordsWeekViewSet.as_view()),
+    path('keywords_month', KeywordsMonthViewSet.as_view()),
     # re_path('admin', admin.site.urls),
 ]
