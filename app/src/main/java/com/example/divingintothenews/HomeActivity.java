@@ -31,8 +31,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private Button btn_date_select, btn_date_daily, btn_date_weekly, btn_date_monthly;
 
-    private String date_selected = "2022-09-19";
-    private String date_selected_text = "어제";
+    private String date_selected = "2022-10-30";
+    private String date_selected_text = "일간";
     private String category_selected = "사회";
 
     private Toast toastMessage;
@@ -51,6 +51,7 @@ public class HomeActivity extends AppCompatActivity {
 
     GridView gridview;
     WordCloudBtnAdapter adapter;
+    LinkServer link;
 
     private final UnderlineSpan underlineSpan = new UnderlineSpan();
     private final StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
@@ -149,11 +150,17 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             if (view.getId() == R.id.btn_date_daily){
-                date_selected_text = "어제";}
+                date_selected_text = "일간";
+                date_selected = "2022-10-30";
+                InitializeWordCloud();}
             else if (view.getId() == R.id.btn_date_weekly){
-                date_selected_text = "지난 한 주";}
+                date_selected_text = "주간";
+                date_selected = "2022-10-24";
+                InitializeWordCloud();}
             else if (view.getId() == R.id.btn_date_monthly){
-                date_selected_text = "지난 한 달";}
+                date_selected_text = "월간";
+                date_selected = "10";
+                InitializeWordCloud();}
             //setTv_title();
         }
     }
@@ -193,7 +200,12 @@ public class HomeActivity extends AppCompatActivity {
     public void InitializeWordCloud()
     {
         gridview.setAdapter(null);
-        LinkServer link = new LinkServer(this, date_selected, category_selected);
+        link = new LinkServer(this, date_selected, category_selected);
+        switch (date_selected_text){
+            case("일간"):{link.link_server_keyword();break;}
+            case("주간"):{link.link_server_weekly_keyword();break;}
+            case("월간"):{link.link_server_monthly_keyword();break;}
+        }
     }
 
     // 홈 화면 변수 초기화

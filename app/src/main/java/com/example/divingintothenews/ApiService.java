@@ -22,5 +22,18 @@ public interface ApiService {
             @Query("category") String category
     );
 
+    @GET("keywords_week")
+    Call<List<KeywordPost>> getWeeklyKeywordPosts(
+            @Query("date_start") String date_start,
+            @Query("date_end") String date_end,
+            @Query("category") String category
+    );
+
+    @GET("keywords_month")
+    Call<List<KeywordPost>> getMonthlyKeywordPosts(
+            @Query("month") String date,
+            @Query("category") String category
+    );
+
 
 }

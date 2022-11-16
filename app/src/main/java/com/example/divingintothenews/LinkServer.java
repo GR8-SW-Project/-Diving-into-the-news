@@ -13,17 +13,24 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class LinkServer {
     private ArrayList<Keyword> keywords = new ArrayList<Keyword>();
 
-    String date_selected, category_selected;
+    String date_selected, date_selected_text, category_selected;
     HomeActivity context;
-
     WordCloudBtnAdapter adapter;
+    ApiService jsonPlaceHOlderApi;
+
+    Call<List<KeywordPost>> call;
 
     public LinkServer(HomeActivity context, String date_selected, String category_selected){
         this.date_selected =date_selected;
         this.category_selected = category_selected;
         this.context = context;
 
-        link_server_keyword();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://b55e-119-69-162-141.jp.ngrok.io/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        jsonPlaceHOlderApi = retrofit.create(ApiService.class);
     }
 
     public ArrayList<Keyword> getKeywords()
@@ -37,15 +44,26 @@ public class LinkServer {
     }
 
     public void link_server_keyword(){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://b9eb-119-69-162-141.jp.ngrok.io/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        date_selected_text = date_selected;
 
-        ApiService jsonPlaceHOlderApi = retrofit.create(ApiService.class);
+        call = jsonPlaceHOlderApi.getKeywordPosts(date_selected, category_selected);
+        call_server();
+    }
 
-        Call<List<KeywordPost>> call = jsonPlaceHOlderApi.getKeywordPosts(date_selected, category_selected);
+    public void link_server_weekly_keyword(){
+        date_selected_text = "주간";
 
+        call = jsonPlaceHOlderApi.getWeeklyKeywordPosts(date_selected, "2022-10-30", category_selected);
+        call_server();
+    }
+
+    public void link_server_monthly_keyword(){
+        date_selected_text = "월간";
+
+        call = jsonPlaceHOlderApi.getMonthlyKeywordPosts(date_selected, category_selected);
+        call_server();
+    }
+    public void call_server(){
         call.enqueue(new Callback<List<KeywordPost>>() {
             @Override
             public void onResponse(Call<List<KeywordPost>> call, Response<List<KeywordPost>> response) {
@@ -57,7 +75,7 @@ public class LinkServer {
 
                     return;
                 }else
-                {context.makeToast(date_selected + "의 " + category_selected + " 키워드");}
+                {context.makeToast(date_selected_text + "의 " + category_selected + " 키워드");}
 
                 List<KeywordPost> posts = response.body();
 
