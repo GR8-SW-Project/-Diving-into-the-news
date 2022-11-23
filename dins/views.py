@@ -10,12 +10,15 @@ class NewsViewSet(APIView):
     # throttle_classes = [AnonRateThrottle]
     
     def get(self, request, **kwargs):
-        search_date = request.GET.get('date') # news?date=2022-09-19
+        search_date_start = request.GET.get('date_start') # news?date_start=2022-09-19
+        search_date_end = request.GET.get('date_end')
         search_category = request.GET.get('category')
         search_content = request.GET.get('content')
         
-        if search_date != None and search_category != None and search_content != None:
-            queryset = News.objects.filter(date=search_date, category=search_category, content__contains=search_content)
+        if search_date_start != None and search_date_end != None and search_category != None and search_content != None:
+            queryset = News.objects.filter(date__range=[search_date_start, search_date_end], category=search_category, content__contains=search_content)
+        elif search_date_start != None and search_date_end != None and search_category != None:
+            queryset = News.objects.filter(date__range=[search_date_start, search_date_end], category=search_category)
         else:
             queryset = News.objects.all()
         
