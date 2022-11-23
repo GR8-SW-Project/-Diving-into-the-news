@@ -11,7 +11,7 @@ import android.webkit.WebViewClient;
 
 public class ArticleActivity extends AppCompatActivity {
 
-    private static String[] article = new String[4];
+    private static Article article;
     private static String url;
     private WebView webView;
 
@@ -19,7 +19,7 @@ public class ArticleActivity extends AppCompatActivity {
         article = NewsListActivity.getSelectedArticle();
     }
     public void setURL(){
-        url = article[3];
+        url = article.getLink();
     }
 
     @Override
@@ -36,8 +36,8 @@ public class ArticleActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(article[0]);
-            actionBar.setSubtitle(article[1] + "/" + article[2]);
+            actionBar.setTitle(article.getTitle());
+            actionBar.setSubtitle(article.getCompany() + "/" + article.getDate());
         }
     }
 

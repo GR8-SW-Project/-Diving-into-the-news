@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -21,18 +22,13 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NewsListActivity extends AppCompatActivity {
-    String title, headline, date, link, content, category, site;
+    ArrayList<Article> articleList = new ArrayList<Article>();
 
-    ArrayList<String> titleList = new ArrayList<String>();
-    ArrayList<String> companyList = new ArrayList<String>();
-    ArrayList<String> dateList = new ArrayList<String>();
-    ArrayList<String> linkList = new ArrayList<String>();
-    
     ListView listView;
 
-    private static String[] selectedArticle;
+    private static Article selectedArticle;
 
-    public static String[] getSelectedArticle(){
+    public static Article getSelectedArticle(){
         return selectedArticle;
     }
 
@@ -41,6 +37,7 @@ public class NewsListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_list);
         link_server_news();
+
 
         listView = (ListView) findViewById(R.id.customListView);
 
@@ -53,7 +50,7 @@ public class NewsListActivity extends AppCompatActivity {
                         | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
 
-                selectedArticle = new String[] {titleList.get(i), companyList.get(i), dateList.get(i), linkList.get(i)};
+                selectedArticle = articleList.get(i);
             }
         });
 
@@ -73,15 +70,15 @@ public class NewsListActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void link_server_news(){
+    public void link_server_news()
+    {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://b55e-119-69-162-141.jp.ngrok.io/")
+                .baseUrl("https://9a56-119-69-162-141.jp.ngrok.io/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         ApiService jsonPlaceHOlderApi = retrofit.create(ApiService.class);
-
-        Call<List<NewsPost>> call = jsonPlaceHOlderApi.getNewsPosts(getIntent().getStringExtra("date"),
+        Call<List<NewsPost>> call = jsonPlaceHOlderApi.getNewsPosts(getIntent().getStringExtra("date"), "2022-10-30",
                 getIntent().getStringExtra("category"), getIntent().getStringExtra("keyword"));
 
         call.enqueue(new Callback<List<NewsPost>>() {
@@ -97,12 +94,12 @@ public class NewsListActivity extends AppCompatActivity {
                 List<NewsPost> posts = response.body();
 
                 for ( NewsPost post : posts) {
-                    titleList.add(post.getTitle());
-                    companyList.add(post.getSite());
-                    dateList.add(post.getDate());
-                    linkList.add(post.getLink());
+
+                    Article article = new Article(post.getTitle(), post.getSite(), post.getDate(), post.getLink());
+                    articleList.add(article);
                 }
-                CustomBaseAdapter customBaseAdapter = new CustomBaseAdapter(getApplicationContext(), titleList, companyList, dateList);
+                articleList.sort(Comparator.comparing(Article::getDate).reversed());
+                CustomBaseAdapter customBaseAdapter = new CustomBaseAdapter(getApplicationContext(), articleList);
                 listView.setAdapter(customBaseAdapter);
             }
 

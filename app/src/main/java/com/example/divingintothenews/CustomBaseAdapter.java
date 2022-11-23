@@ -12,24 +12,19 @@ import java.util.ArrayList;
 
 public class CustomBaseAdapter extends BaseAdapter {
     Context context;
-    ArrayList<String> titleList;
-    ArrayList<String> companyList;
-    ArrayList<String> dateList;
-    ArrayList<String> linkList;
+    ArrayList<Article> articleList;
     LayoutInflater inflater;
 
-    public CustomBaseAdapter(Context ctx, ArrayList<String> titleList, ArrayList<String> companyList, ArrayList<String> dateList) {
+    public CustomBaseAdapter(Context ctx, ArrayList<Article> articleList) {
         this.context = ctx;
-        this.titleList = titleList;
-        this.companyList = companyList;
-        this.dateList = dateList;
+        this.articleList = articleList;
         inflater = LayoutInflater.from(ctx);
     }
 
 
     @Override
     public int getCount() {
-        return titleList.size();
+        return articleList.size();
     }
 
     @Override
@@ -48,9 +43,9 @@ public class CustomBaseAdapter extends BaseAdapter {
         TextView titleView = (TextView) convertView.findViewById(R.id.titleView);
         TextView companyView = (TextView) convertView.findViewById(R.id.company);
         TextView dateView = (TextView) convertView.findViewById(R.id.date);
-        titleView.setText(titleList.get(position));
-        companyView.setText(companyList.get(position));
-        dateView.setText(dateList.get(position));
+        titleView.setText(articleList.get(position).getTitle());
+        companyView.setText(articleList.get(position).getCompany());
+        dateView.setText(articleList.get(position).getDate());
         return convertView;
     }
 }

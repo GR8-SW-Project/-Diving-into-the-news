@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class LinkServer {
     private ArrayList<Keyword> keywords = new ArrayList<Keyword>();
 
-    String date_selected, date_selected_text, category_selected;
+    String date_selected, date_range, category_selected;
     HomeActivity context;
     WordCloudBtnAdapter adapter;
     ApiService jsonPlaceHOlderApi;
@@ -26,7 +26,7 @@ public class LinkServer {
         this.context = context;
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://b55e-119-69-162-141.jp.ngrok.io/")
+                .baseUrl("https://9a56-119-69-162-141.jp.ngrok.io/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -44,23 +44,23 @@ public class LinkServer {
     }
 
     public void link_server_keyword(){
-        date_selected_text = date_selected;
+        date_range = date_selected;
 
         call = jsonPlaceHOlderApi.getKeywordPosts(date_selected, category_selected);
         call_server();
     }
 
     public void link_server_weekly_keyword(){
-        date_selected_text = "주간";
+        date_range = "주간";
 
         call = jsonPlaceHOlderApi.getWeeklyKeywordPosts(date_selected, "2022-10-30", category_selected);
         call_server();
     }
 
     public void link_server_monthly_keyword(){
-        date_selected_text = "월간";
+        date_range = "월간";
 
-        call = jsonPlaceHOlderApi.getMonthlyKeywordPosts(date_selected, category_selected);
+        call = jsonPlaceHOlderApi.getMonthlyKeywordPosts("10", category_selected);
         call_server();
     }
     public void call_server(){
@@ -75,7 +75,7 @@ public class LinkServer {
 
                     return;
                 }else
-                {context.makeToast(date_selected_text + "의 " + category_selected + " 키워드");}
+                {context.makeToast(date_range + "의 " + category_selected + " 키워드");}
 
                 List<KeywordPost> posts = response.body();
 

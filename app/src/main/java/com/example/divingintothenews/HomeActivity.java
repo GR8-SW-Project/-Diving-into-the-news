@@ -32,7 +32,7 @@ public class HomeActivity extends AppCompatActivity {
     private Button btn_date_select, btn_date_daily, btn_date_weekly, btn_date_monthly;
 
     private String date_selected = "2022-10-30";
-    private String date_selected_text = "일간";
+    private String date_range = "일간";
     private String category_selected = "사회";
 
     private Toast toastMessage;
@@ -94,7 +94,7 @@ public class HomeActivity extends AppCompatActivity {
     // 뉴스 키워드 제목 변경
     public void setTv_title()
     {
-        String text = date_selected_text + "의 " + category_selected + " 뉴스 키워드";
+        String text = date_range + "의 " + category_selected + " 뉴스 키워드";
         tv_title.setText(text);
     }
      */
@@ -104,6 +104,7 @@ public class HomeActivity extends AppCompatActivity {
     {
         Intent intent = new Intent(this, NewsListActivity.class);
         intent.putExtra("date", date_selected);
+        intent.putExtra("date_range", date_range);
         intent.putExtra("category", category_selected);
         intent.putExtra("keyword", keyword);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -150,16 +151,16 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             if (view.getId() == R.id.btn_date_daily){
-                date_selected_text = "일간";
+                date_range = "일간";
                 date_selected = "2022-10-30";
                 InitializeWordCloud();}
             else if (view.getId() == R.id.btn_date_weekly){
-                date_selected_text = "주간";
+                date_range = "주간";
                 date_selected = "2022-10-24";
                 InitializeWordCloud();}
             else if (view.getId() == R.id.btn_date_monthly){
-                date_selected_text = "월간";
-                date_selected = "10";
+                date_range = "월간";
+                date_selected = "2022-10-01";
                 InitializeWordCloud();}
             //setTv_title();
         }
@@ -191,8 +192,8 @@ public class HomeActivity extends AppCompatActivity {
             formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String local_date_text = local_date.format(formatter);
             date_selected = local_date_text;
+            date_range = "일간";
             InitializeWordCloud();
-            date_selected_text = local_date_text;
             //setTv_title();
         }
     }
@@ -201,7 +202,7 @@ public class HomeActivity extends AppCompatActivity {
     {
         gridview.setAdapter(null);
         link = new LinkServer(this, date_selected, category_selected);
-        switch (date_selected_text){
+        switch (date_range){
             case("일간"):{link.link_server_keyword();break;}
             case("주간"):{link.link_server_weekly_keyword();break;}
             case("월간"):{link.link_server_monthly_keyword();break;}

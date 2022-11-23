@@ -11,7 +11,8 @@ import java.util.List;
 public interface ApiService {
     @GET("news")
     Call<List<NewsPost>> getNewsPosts(
-            @Query("date") String date,
+            @Query("date_start") String date_start,
+            @Query("date_end") String date_end,
             @Query("category") String category,
             @Query("content") String keyword
     );
