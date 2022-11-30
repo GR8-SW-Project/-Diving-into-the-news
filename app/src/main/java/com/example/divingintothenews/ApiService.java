@@ -17,6 +17,13 @@ public interface ApiService {
             @Query("content") String keyword
     );
 
+    @GET("news")
+    Call<List<NewsPost>> getWholeNewsPosts(
+            @Query("date_start") String date_start,
+            @Query("date_end") String date_end,
+            @Query("category") String category
+    );
+
     @GET("keywords")
     Call<List<KeywordPost>> getKeywordPosts(
             @Query("date") String date,

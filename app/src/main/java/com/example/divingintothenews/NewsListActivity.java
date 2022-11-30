@@ -32,6 +32,8 @@ public class NewsListActivity extends AppCompatActivity {
         return selectedArticle;
     }
 
+    Call<List<NewsPost>> call;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,8 +58,9 @@ public class NewsListActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle("\"" + getIntent().getStringExtra("keyword") + "\" 뉴스 검색 결과");
-        }
+            if(getIntent().getBooleanExtra("temp", false)) {
+                actionBar.setTitle(getIntent().getStringExtra("date")+"의 " + getIntent().getStringExtra("category") + " 뉴스 리스트");
+            } else{actionBar.setTitle("\"" + getIntent().getStringExtra("keyword") + "\" 뉴스 검색 결과");}}
     }
 
     @Override
@@ -73,14 +76,18 @@ public class NewsListActivity extends AppCompatActivity {
     public void link_server_news()
     {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://9a56-119-69-162-141.jp.ngrok.io/")
+                .baseUrl("https://5999-119-69-162-141.jp.ngrok.io/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         ApiService jsonPlaceHOlderApi = retrofit.create(ApiService.class);
-        Call<List<NewsPost>> call = jsonPlaceHOlderApi.getNewsPosts(getIntent().getStringExtra("date"), "2022-10-30",
-                getIntent().getStringExtra("category"), getIntent().getStringExtra("keyword"));
-
+        if (getIntent().getBooleanExtra("temp", false)){
+            call = jsonPlaceHOlderApi.getWholeNewsPosts(getIntent().getStringExtra("date"), getIntent().getStringExtra("date"),
+                    getIntent().getStringExtra("category"));
+        }else {
+            call = jsonPlaceHOlderApi.getNewsPosts(getIntent().getStringExtra("date"), "2022-10-30",
+                    getIntent().getStringExtra("category"), getIntent().getStringExtra("keyword"));
+        }
         call.enqueue(new Callback<List<NewsPost>>() {
             @Override
             public void onResponse(Call<List<NewsPost>> call, Response<List<NewsPost>> response) {

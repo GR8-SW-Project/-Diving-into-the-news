@@ -21,28 +21,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <Button
-                android:id="@+id/btn_ctg_society"
-                android:layout_width="90dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:text="사회"
-                android:textColor="@color/black"
-                android:textSize="19sp" />
-
-            <Button
-                android:id="@+id/btn_ctg_international"
-                android:layout_width="90dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:text="국제"
-                android:textColor="@color/black"
-                android:textSize="19sp" />
-
-            <Button
                 android:id="@+id/btn_ctg_sports"
                 android:layout_width="105dp"
                 android:layout_height="wrap_content"
@@ -54,8 +32,19 @@
                 android:textSize="19sp" />
 
             <Button
+                android:id="@+id/btn_ctg_entertainment"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:text="연예"
+                android:textColor="@color/black"
+                android:textSize="19sp" />
+
+            <Button
                 android:id="@+id/btn_ctg_culture"
-                android:layout_width="wrap_content"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
@@ -76,6 +65,17 @@
                 android:textSize="19sp" />
 
             <Button
+                android:id="@+id/btn_ctg_society"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:text="사회"
+                android:textColor="@color/black"
+                android:textSize="19sp" />
+
+            <Button
                 android:id="@+id/btn_ctg_politics"
                 android:layout_width="90dp"
                 android:layout_height="wrap_content"
@@ -87,13 +87,13 @@
                 android:textSize="19sp" />
 
             <Button
-                android:id="@+id/btn_ctg_entertainment"
+                android:id="@+id/btn_ctg_international"
                 android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:text="연예"
+                android:text="국제"
                 android:textColor="@color/black"
                 android:textSize="19sp" />
         </LinearLayout>
@@ -127,6 +127,7 @@
             android:background="@drawable/custom_button"
             android:text="일간"
             android:textColor="@color/black"
+            android:textSize="13dp"
             app:backgroundTint = "@color/white"/>
 
         <Button
@@ -138,6 +139,7 @@
             android:background="@drawable/custom_button"
             android:text="주간"
             android:textColor="@color/black"
+            android:textSize="13dp"
             app:backgroundTint = "@color/white"/>
 
         <Button
@@ -149,31 +151,39 @@
             android:background="@drawable/custom_button"
             android:text="월간"
             android:textColor="@color/black"
+            android:textSize="13dp"
             app:backgroundTint = "@color/white"/>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="15dp"
-        android:orientation="vertical"
-        android:background="@color/white">
-
+        android:layout_height="587dp"
+        android:background="@color/white"
+        android:orientation="vertical">
 
         <GridView
             android:id="@+id/gridView1"
             android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            tools:context="com.example.user.gridbuttonview.GridActivity"
-            android:layout_marginTop="20dp"
+            android:layout_height="574dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
             android:columnWidth="200dp"
             android:gravity="center"
             android:numColumns="2"
+            android:stretchMode="columnWidth"
             android:verticalSpacing="15dp"
-            android:background="@color/white"
-            android:stretchMode="columnWidth">
-        </GridView>
+            tools:context="com.example.user.gridbuttonview.GridActivity"></GridView>
+
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_temp"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:textColor="@color/black"
+        android:text="일일 전체 뉴스 리스트" />
 
 </LinearLayout>

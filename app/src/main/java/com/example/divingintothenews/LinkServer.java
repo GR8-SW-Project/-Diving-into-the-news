@@ -26,7 +26,7 @@ public class LinkServer {
         this.context = context;
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://9a56-119-69-162-141.jp.ngrok.io/")
+                .baseUrl("https://5999-119-69-162-141.jp.ngrok.io/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

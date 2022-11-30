@@ -1,9 +1,16 @@
 package com.example.divingintothenews;
 
+import static com.example.divingintothenews.R.color.gray;
+import static com.example.divingintothenews.R.color.main_color;
+import static com.example.divingintothenews.R.color.purple_500;
+
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -28,12 +35,14 @@ public class HomeActivity extends AppCompatActivity {
     private TextView tv_title;
 
     private Button btn_ctg_sports,btn_ctg_entertainment, btn_ctg_economy, btn_ctg_politics, btn_ctg_culture, btn_ctg_international, btn_ctg_society;
-
     private Button btn_date_select, btn_date_daily, btn_date_weekly, btn_date_monthly;
+    private Button btn_temp;
+
+    private int btn_date_selected;
 
     private String date_selected = "2022-10-30";
     private String date_range = "일간";
-    private String category_selected = "사회";
+    private String category_selected = "스포츠";
 
     private Toast toastMessage;
 
@@ -80,7 +89,25 @@ public class HomeActivity extends AppCompatActivity {
         content.removeSpan(underlineSpan);
         content.removeSpan(boldSpan);
         btn.setText(content);
-        btn.setTextSize(18);
+        btn.setTextSize(19);
+    }
+
+    // 선택된 카테고리 버튼 표시용 메소드
+    public void buttonBold(Button btn)
+    {
+        content = new SpannableString(btn.getText());
+        content.setSpan(boldSpan, 0, content.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        btn.setText(content);
+        btn.setTextSize(17);
+    }
+
+    // 타 카테고리 버튼 선택 시 기존 표시 제거
+    public void buttonRemoveBold(Button btn)
+    {
+        content = new SpannableString(btn.getText());
+        content.removeSpan(boldSpan);
+        btn.setText(content);
+        btn.setTextSize(13);
     }
 
     public void makeToast(String text)
@@ -148,21 +175,39 @@ public class HomeActivity extends AppCompatActivity {
 
     // 일간, 주간, 월간 선택 버튼 리스너
     class DateBtnOnClickListener implements Button.OnClickListener {
+        @SuppressLint("ResourceAsColor")
         @Override
         public void onClick(View view) {
-            if (view.getId() == R.id.btn_date_daily){
-                date_range = "일간";
-                date_selected = "2022-10-30";
-                InitializeWordCloud();}
-            else if (view.getId() == R.id.btn_date_weekly){
-                date_range = "주간";
-                date_selected = "2022-10-24";
-                InitializeWordCloud();}
-            else if (view.getId() == R.id.btn_date_monthly){
-                date_range = "월간";
-                date_selected = "2022-10-01";
-                InitializeWordCloud();}
-            //setTv_title();
+            Button btn_old = findViewById(btn_date_selected);
+            Button btn_new = findViewById(view.getId());
+
+            if (btn_date_selected != view.getId()) {
+                btn_date_selected = btn_new.getId();
+
+                buttonBold(btn_new);
+                if(btn_old != findViewById(R.id.btn_date_select)){
+                buttonRemoveBold(btn_old);}
+
+                if (view.getId() == R.id.btn_date_daily) {
+                    date_range = "일간";
+                    date_selected = "2022-10-30";
+                    InitializeWordCloud();
+                    btn_temp.setEnabled(true);
+                    btn_temp.setTextColor(R.color.black);
+                } else if (view.getId() == R.id.btn_date_weekly) {
+                    date_range = "주간";
+                    date_selected = "2022-10-24";
+                    InitializeWordCloud();
+                    btn_temp.setEnabled(false);
+                    btn_temp.setTextColor(R.color.gray);
+                } else if (view.getId() == R.id.btn_date_monthly) {
+                    date_range = "월간";
+                    date_selected = "2022-10-01";
+                    InitializeWordCloud();
+                    btn_temp.setEnabled(false);
+                    btn_temp.setTextColor(R.color.gray);
+                }
+            }
         }
     }
 
@@ -186,6 +231,7 @@ public class HomeActivity extends AppCompatActivity {
 
     // 날짜 선택 리스너
     class DatePickerOnDateSetListener implements DatePickerDialog.OnDateSetListener{
+        @SuppressLint("ResourceAsColor")
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             LocalDate local_date = LocalDate.of(year, monthOfYear+1, dayOfMonth);
@@ -193,11 +239,22 @@ public class HomeActivity extends AppCompatActivity {
             String local_date_text = local_date.format(formatter);
             date_selected = local_date_text;
             date_range = "일간";
+            btn_temp.setEnabled(true);
+            btn_temp.setTextColor(R.color.black);
             InitializeWordCloud();
-            //setTv_title();
+
+            Button btn_old = findViewById(btn_date_selected);
+            Button btn_new = findViewById(R.id.btn_date_select);
+
+            if (btn_date_selected != view.getId()) {
+                btn_date_selected = btn_new.getId();
+
+                buttonRemoveBold(btn_old);
+            }
         }
     }
 
+    // 워드클라우드 초기화
     public void InitializeWordCloud()
     {
         gridview.setAdapter(null);
@@ -212,7 +269,8 @@ public class HomeActivity extends AppCompatActivity {
     // 홈 화면 변수 초기화
     public void InitializeVariable()
     {
-        btn_ctg_selected = R.id.btn_ctg_society;
+        btn_date_selected = R.id.btn_date_daily;
+        btn_ctg_selected = R.id.btn_ctg_sports;
     }
 
     // 홈 화면 내 View 들을 초기화
@@ -240,6 +298,8 @@ public class HomeActivity extends AppCompatActivity {
 
         // 워드클라우드 GridView
         gridview = (GridView) findViewById(R.id.gridView1);
+
+        btn_temp = findViewById(R.id.btn_temp);
     }
 
     // 홈 화면 리스너
@@ -261,6 +321,24 @@ public class HomeActivity extends AppCompatActivity {
 
         DatePickerBtnOnClickListener onClickListener3 = new DatePickerBtnOnClickListener();
         btn_date_select.setOnClickListener(onClickListener3);
+
+        btn_temp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                changeIntent();
+            }
+        });
+    }
+
+    public void changeIntent(){
+        Intent intent = new Intent(this, NewsListActivity.class);
+        intent.putExtra("date", date_selected);
+        intent.putExtra("category", category_selected);
+        intent.putExtra("temp", true);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
     }
 
     @Override
@@ -273,7 +351,8 @@ public class HomeActivity extends AppCompatActivity {
         InitializeView();
         InitializeListener();
 
-        buttonHighlight(btn_ctg_society);
+        buttonBold(btn_date_daily);
+        buttonHighlight(btn_ctg_sports);
 
         InitializeWordCloud();
     }
