@@ -76,7 +76,7 @@ public class NewsListActivity extends AppCompatActivity {
     public void link_server_news()
     {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://5999-119-69-162-141.jp.ngrok.io/")
+                .baseUrl("https://f7f9-119-69-162-141.jp.ngrok.io/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

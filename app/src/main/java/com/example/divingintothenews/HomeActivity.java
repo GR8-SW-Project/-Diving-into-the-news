@@ -27,6 +27,8 @@ import android.widget.Toast;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 public class HomeActivity extends AppCompatActivity {
@@ -216,7 +218,7 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             InitializeDatePicker();
-            date_picker.updateDate(now.getYear(), now.getMonthValue()-1, now.getDayOfMonth());
+            date_picker.updateDate(2022, 9, 30);
             date_picker.show();
         }
     }
@@ -225,6 +227,11 @@ public class HomeActivity extends AppCompatActivity {
     public void InitializeDatePicker()
     {
         date_picker = new DatePickerDialog(this, null, now.getYear(), now.getMonthValue()-1, now.getDayOfMonth());
+        Calendar cal = Calendar.getInstance();
+        cal.set(2022,9,30);
+        date_picker.getDatePicker().setMaxDate(cal.getTimeInMillis());
+        cal.set(2022,9,1);
+        date_picker.getDatePicker().setMinDate(cal.getTimeInMillis());
         DatePickerOnDateSetListener listener = new DatePickerOnDateSetListener();
         date_picker.setOnDateSetListener(listener);
     }
